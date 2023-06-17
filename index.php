@@ -1,18 +1,24 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Backend/Full-stack recruitment task</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-</head>
+<?php
 
-<body>
+declare(strict_types=1);
 
-<main>
-    <?php require_once './partials/main.php'; ?>
-</main>
+namespace App;
+use App\Controller\UsersController;
+require_once("./src/utils/debug.php");
+// require_once("./src/utils/displayAllArrayValues.php");
+require_once("./src/Controller/UsersController.php");
+// require_once("./src/Controller/UsersController.php");
 
-<script src="assets/js/script.js"></script>
-</body>
-</html>
+
+$request = [
+    "get" => $_GET,
+    "post" => $_POST
+];
+
+
+// new UsersController();
+
+(new UsersController($request))->run();
+
+
+
