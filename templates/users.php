@@ -14,7 +14,7 @@
                 <tr class="table__row">
                     <td class="table__data"><?php echo $user['name'] ?></td>
                     <td class="table__data"><?php echo $user['username'] ?></td>
-                    <td class="table__data"><?php echo $user['email'] ?></td>
+                    <td class="table__data"><a class="table__contact" href="mailto: <?php echo $user['email'] ?>"><?php echo $user['email'] ?></a></td>
                     <?php if (is_array($user['address'])) : ?>
                         <td class="table__data">
                             <?php foreach (array_slice($user['address'], 0, 3) as $address) : ?>
@@ -24,7 +24,7 @@
                     <?php else : ?>
                         <td class="table__data"><?php echo $user['address'] ?></td>
                     <?php endif ?>
-                    <td class="table__data"><?php echo $user['phone'] ?></td>
+                    <td class="table__data"><a class="table__contact" href="phoneto: <?php echo $user['phone'] ?>"><?php echo $user['phone'] ?></a></td>
                     <?php if (is_array($user['company'])) : ?>
                         <td class="table__data"><?php echo  $user['company']['name'] ?></td>
 
