@@ -1,91 +1,87 @@
-<div class="tbl-header">
-    <table cellpadding="0" cellspacing="0" border="0">
+<table class="table">
+    <?php if (count($params['usersArray']) > 0) : ?>
         <thead>
-            <tr>
-                <?php foreach ($params['userTableHeaders'] ?? [] as $userTableHeader) : ?>
-                    <th><?php echo $userTableHeader ?></th>
+            <tr class="table__row">
+                <?php foreach ($params['tableHeaders'] ?? [] as $header) : ?>
+                    <th class="table__header"><?php echo $header ?></th>
                 <?php endforeach; ?>
+                <th class="table__header"></th>
             </tr>
         </thead>
-    </table>
-</div>
-<div class="tbl-content">
-    <table cellpadding="0" cellspacing="0" border="0">
         <tbody>
-            <tr>
-                <?php foreach (($param['usersArray'] ?? []) as $user) : ?>
-                    <td>Name: <?php echo $user['name'] ?></td>
-                    <td>UserName: <?php echo $user['username'] ?></td>
-                    <td>Email: <?php echo $user['email'] ?></td>
+
+            <?php foreach (($params['usersArray'] ?? []) as $user) : ?>
+                <tr class="table__row">
+                    <td class="table__data"><?php echo $user['name'] ?></td>
+                    <td class="table__data"><?php echo $user['username'] ?></td>
+                    <td class="table__data"><?php echo $user['email'] ?></td>
                     <?php if (is_array($user['address'])) : ?>
-                        <td>
+                        <td class="table__data">
                             <?php foreach (array_slice($user['address'], 0, 3) as $address) : ?>
                                 <?php echo $address ?>
                             <?php endforeach ?>
                         </td>
                     <?php else : ?>
-                        <td>Address: <?php echo $user['address'] ?></td>
+                        <td class="table__data"><?php echo $user['address'] ?></td>
                     <?php endif ?>
-                    <td> <?php echo $user['phone'] ?></td>
+                    <td class="table__data"><?php echo $user['phone'] ?></td>
                     <?php if (is_array($user['company'])) : ?>
-                        <td><?php echo  $user['company']['name'] ?></td>
+                        <td class="table__data"><?php echo  $user['company']['name'] ?></td>
 
                     <?php else : ?>
-                        <td><?php echo  $user['company'] ?></td>
+                        <td class="table__data"><?php echo  $user['company'] ?></td>
 
                     <?php endif ?>
-                    <td>
+                    <td class="table__data">
                         <form method="POST" action="/?action=delete">
                             <input name="id" type="hidden" value="<?php echo $user['id'] ?>" />
-                            <input type="submit" value="Remove Button" />
+                            <input class="table__remove-button" type="submit" value="Remove" />
                         </form>
                         </a>
-
                     </td>
-
-            </tr>
-
-        <?php endforeach ?>
-
+                </tr>
+            <?php endforeach ?>
 
         </tbody>
-    </table>
-</div>
+    <?php else : ?>
+        <div>There is no users :(</div>
+    <?php endif ?>
+</table>
 
-<form action="/?action=form" method="POST">
-    <ul>
-        <li>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+<form class="form" action="/?action=form" method="POST">
+    <ul class="form__list">
+        <li class="form__item">
+            <label class="form__label" for="name">Name:</label>
+            <input class="form__input" type="text" id="name" name="name" required>
         </li>
 
-        <li>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
+        <li class="form__item">
+            <label class="form__label" for="username">Username:</label>
+            <input class="form__input" type="text" id="username" name="username" required>
         </li>
 
-        <li>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email">
+        <li class="form__item">
+            <label class="form__label" for="email">Email:</label>
+            <input class="form__input" type="email" id="email" name="email" required>
         </li>
 
-        <li>
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address">
+        <li class="form__item">
+            <label class="form__label" for="address">Address:</label>
+            <input class="form__input" type="text" id="address" name="address" required>
         </li>
 
-        <li>
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone">
+        <li class="form__item">
+            <label class="form__label" for="phone">Phone:</label>
+            <input class="form__input" type="tel" id="phone" name="phone" required>
         </li>
 
-        <li>
-            <label for="company">Company:</label>
-            <input type="text" id="company" name="company">
+        <li class="form__item">
+            <label class="form__label" for="company">Company:</label>
+            <input class="form__input" type="text" id="company" name="company" required>
         </li>
 
-        <li>
-            <input type="submit" value="Submit">
+        <li class="form__item">
+            <input class="form__submit" type="submit" value="Submit">
         </li>
     </ul>
 </form>

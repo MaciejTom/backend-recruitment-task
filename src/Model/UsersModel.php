@@ -4,61 +4,83 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-
 use App\User;
 
 class UsersModel
 {
-    private string $userFile;
     private array $usersArray;
     private array $newUsersArray;
     private array $userTableKeys;
-    private User $newUser;
+    private const USERS_FILE_PATH = __DIR__ . '/../../dataset/users.json';
 
-
-    function __construct($userTableKeys)
+    public function __construct(array $userTableKeys)
     {
         $this->userTableKeys = $userTableKeys;
-        $this->retriveUsersFromFile();
+        $this->retrieveUsersFromFile();
     }
 
-    function getUsers(): array
+    public function getUsers(): array
     {
-        $this->retriveUsersFromFile();
+        $this->retrieveUsersFromFile();
         return $this->usersArray;
     }
 
-    function saveUsers(): void
+    public function saveUsers(): void
     {
-        $json = json_encode($this->newUsersArray, JSON_PRETTY_PRINT);
-        file_put_contents(__DIR__ . '/../../dataset/users.json', $json);
+        try {
+            $json = json_encode($this->newUsersArray, JSON_PRETTY_PRINT);
+            if ($json === false) {
+                throw new \RuntimeException('Failed to encode users data to JSON.');
+            }
+
+            $result = file_put_contents(self::USERS_FILE_PATH, $json);
+            if ($result === false) {
+                throw new \RuntimeException('Failed to save users data to file.');
+            }
+        } catch (\RuntimeException $e) {
+            echo 'Exception occured: ' . $e->getMessage();
+        }
     }
 
-    function deleteUser(int $userId): void
+    public function deleteUser(int $userId): void
     {
-        $this->retriveUsersFromFile();
+        $this->retrieveUsersFromFile();
         $newUsersArray = $this->usersArray;
 
         $this->newUsersArray = $this->removeElementById($newUsersArray, $userId);
         $this->saveUsers();
     }
 
-    function addUser(User $userData): void
+    public function addUser(User $userData): void
     {
-        $this->retriveUsersFromFile();
+        $this->retrieveUsersFromFile();
         $newUser = array_combine($this->userTableKeys, $userData->getUserData());
 
         $newUsersArray = $this->usersArray;
-        array_push($newUsersArray, $newUser);
+        $newUsersArray[] = $newUser;
         $this->newUsersArray = $newUsersArray;
         $this->saveUsers();
     }
-    function retriveUsersFromFile(): void
+
+    private function retrieveUsersFromFile(): void
     {
-        $this->userFile = file_get_contents(__DIR__ . '/../../dataset/users.json');
-        $this->usersArray = json_decode($this->userFile, true);
+        try {
+            $json = file_get_contents(self::USERS_FILE_PATH);
+            if ($json === false) {
+                throw new \RuntimeException('Failed to read users data from file.');
+            }
+
+            $this->usersArray = json_decode($json, true);
+            if ($this->usersArray === null) {
+                throw new \RuntimeException('Failed to decode users data from JSON.');
+            }
+        } catch (\RuntimeException $e) {
+            echo 'Exception occured: ' . $e->getMessage();
+            $this->usersArray = [];
+        }
     }
-    function removeElementById(array $array, int $id): array
+
+    private function removeElementById(array $array, int $id): array
     {
         return array_values(array_filter($array, function ($element) use ($id) {
             return $element['id'] !== $id;
